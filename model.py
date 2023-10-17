@@ -1,9 +1,9 @@
-from pydantic import BaseModel, EmailStr, validator
-from typing import List
+from pydantic import BaseModel, EmailStr
+from typing import List, Optional
 from datetime import datetime
 
 class User(BaseModel):
-    id: int
+    user_id: int
     username: str
     password_hash: str
     email: EmailStr
@@ -11,82 +11,97 @@ class User(BaseModel):
     registration_date: datetime
     is_active: bool = True
     roles: List[str] = []
+    
+    address: str | None = None
+    phone_number: str | None = None
+    date_of_birth: datetime | None = None
+    profile_image: str | None = None
+
+    def __init__(self, **data):
+        super().__init__(**data)  # Calling the parent (BaseModel) constructor
+        print(f"User {self.email} is being created")
+
+    def __del__(self):
+        print(f"User {self.email} is being destroyed")
+
 
 class ProductCategory(BaseModel):
-    id: int
+    category_id: int
     name: str
     description: str
 
+    def __init__(self, **data):
+        super().__init__(**data)  
+        print(f" {self.name} category is being added")
+
 
 class Product(BaseModel):
-    id: int
+    product_id: int
     name: str
     description: str
     price: float
     stock_quantity: int
     category_id: int
+    manufacturer: str | None = None
+    weight: float | None = None
+    is_available: bool = True
+    image_url: str | None = None
 
-    @validator("price")
-    def validate_price(cls, value):
-        if value <= 0:
-            raise ValueError("Price must be greater than 0")
-        return value
-
-    @validator("stock_quantity")
-    def validate_stock_quantity(cls, value):
-        if value < 0:
-            raise ValueError("Stock quantity cannot be negative")
-        return value
-
+    def __init__(self, **data):
+        super().__init__(**data)  
+        print(f" {self.name} product is being added")
 
 class CartItem(BaseModel):
-    product_id: int
+    cart_item_id: int
     quantity: int
+    product_id: int  
+    cart_id: int  
 
-    @validator("quantity")
-    def validate_quantity(cls, value):
-        if value <= 0:
-            raise ValueError("Quantity must be greater than 0")
-        return value
+class Cart(BaseModel):
+    cart_id: int
+    user_id: int  
 
-class CartResponse(BaseModel):
-    item_id: int
-    product_id: int
-    product_name: str
-    quantity: int
-    total_price: float
+   
 
 class WishlistItem(BaseModel):
-    user_id: int
-    product_id: int
+    wishlist_item_id: int
+    user_id: int 
+    product_id: int 
+
 
 class OrderItem(BaseModel):
-    product_id: int
+    order_item_id: int
     quantity: int
+    product_id: int 
+    order_id: int 
+
+    def __init__(self, **data):
+        super().__init__(**data)  
+        print(f"User {self.name} category is being added")
 
 class Order(BaseModel):
     order_id: int
     user_id: int
-    items: List[OrderItem]
-    order_date: datetime
-    total_amount: float
-    status: str
+
+    def __del__(self):
+        print(f"order {self.order_id} is being completted")
 
 class Payment(BaseModel):
     payment_id: int
-    order_id: int
-    payment_date: datetime
-    payment_amount: float
-    payment_status: str
+    order_id: int  
+
+
+    
 
 class Review(BaseModel):
-    user_id: int
-    entity_id: int
-    text: str
-    created_at: datetime = datetime.now()
+    review_id: int
+    user_id: int  
+    product_id: int  
 
+    
 class Rating(BaseModel):
-    user_id: int
-    entity_id: int
-    rating: int
-    created_at: datetime = datetime.now()
+    rating_id: int
+    user_id: int  
+    product_id: int  
+
+    
