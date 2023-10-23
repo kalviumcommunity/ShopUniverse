@@ -22,6 +22,7 @@ cart_items_db = []
 # Create, Read, Update, Delete User
 @app.post("/users/", response_model=User)
 def create_user(user: User):
+    # print()
     user.user_id = len(users_db) + 1
     users_db.append(user)
     return user

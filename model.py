@@ -10,16 +10,24 @@ class User(BaseModel):
     full_name: str | None = None
     registration_date: datetime
     is_active: bool = True
-    roles: List[str] = []
-    
+    roles: str = 'Customer'
     address: str | None = None
     phone_number: str | None = None
     date_of_birth: datetime | None = None
     profile_image: str | None = None
+    is_active: bool = True
+
+    def activate(self):
+        self.is_active = True
+
+    def deactivate(self):
+        self.is_active = False
 
     def __init__(self, **data):
         super().__init__(**data)  # Calling the parent (BaseModel) constructor
         print(f"User {self.email} is being created")
+        print(f"User is active = {self.is_active} ")
+        print(f"User is active = {self.roles} ")
 
     def __del__(self):
         print(f"User {self.email} is being destroyed")
@@ -46,6 +54,8 @@ class Product(BaseModel):
     weight: float | None = None
     is_available: bool = True
     image_url: str | None = None
+    MIN_PRODUCT_QUANTITY:int = 1
+    MAX_PRODUCT_QUANTITY:int  = 10000
 
     def __init__(self, **data):
         super().__init__(**data)  
@@ -56,12 +66,11 @@ class CartItem(BaseModel):
     quantity: int
     product_id: int  
     cart_id: int  
+    MIN_QUANTITY:int = 0
 
 class Cart(BaseModel):
     cart_id: int
     user_id: int  
-
-   
 
 class WishlistItem(BaseModel):
     wishlist_item_id: int
@@ -74,6 +83,7 @@ class OrderItem(BaseModel):
     quantity: int
     product_id: int 
     order_id: int 
+    MIN_ORDER:int = 1
 
     def __init__(self, **data):
         super().__init__(**data)  
