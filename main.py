@@ -6,7 +6,9 @@ from model import User, Product, Payment, ProductCategory, Rating, Review, Cart,
 
 app = FastAPI()
 
-users_db = []
+from users_repository import UserRepository
+
+
 categories_db = []
 products_db = []
 carts_db = []
@@ -19,36 +21,39 @@ ratings_db = []
 product_lists_db = []
 cart_items_db = []
 
+
+
+
+
+app = FastAPI()
+user_repository = UserRepository()
+
 # Create, Read, Update, Delete User
 @app.post("/users/", response_model=User)
 def create_user(user: User):
-    # print()
-    user.user_id = len(users_db) + 1
-    users_db.append(user)
-    return user
+    return user_repository.create_user(user)
 
 @app.get("/users/{user_id}/", response_model=User)
 def get_user(user_id: int):
-    for user in users_db:
-        if user.user_id == user_id:
-            return user
+    user = user_repository.get_user(user_id)
+    if user:
+        return user
     raise HTTPException(status_code=404, detail="User not found")
 
 @app.put("/users/{user_id}/", response_model=User)
 def update_user(user_id: int, updated_user: User):
-    for i, user in enumerate(users_db):
-        if user.user_id == user_id:
-            users_db[i] = updated_user
-            return updated_user
+    updated_user = user_repository.update_user(user_id, updated_user)
+    if updated_user:
+        return updated_user
     raise HTTPException(status_code=404, detail="User not found")
 
 @app.delete("/users/{user_id}/", response_model=User)
 def delete_user(user_id: int):
-    for i, user in enumerate(users_db):
-        if user.user_id == user_id:
-            deleted_user = users_db.pop(i)
-            return deleted_user
+    deleted_user = user_repository.delete_user(user_id)
+    if deleted_user:
+        return deleted_user
     raise HTTPException(status_code=404, detail="User not found")
+
 
 # Create, Read, Update, Delete Category
 @app.post("/categories/", response_model=ProductCategory)
