@@ -17,7 +17,6 @@ class User(BaseModel):
 
 
 
-
 class ProductCategory(BaseModel):
     category_id: int
     name: str
