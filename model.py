@@ -85,4 +85,30 @@ class Payment(BaseModel):
     payment_id: int
     order_id: int  
 
+class AbstractReviewRating(ABC, BaseModel):
+    review_rating_id: int
+    user_id: int
+    product_id: int
+    content: str
+    rating: int
+
+    @abstractmethod
+    def additional_method(self):
+        pass
+
+class CommonReviewRatingFields(BaseModel):
+    review_rating_id: int
+    user_id: int
+    product_id: int
+    content: str
+    rating: int
+
+class Review(AbstractReviewRating):
+    def additional_method(self):
+        return f"Review by User {self.user_id} for Product {self.product_id}: {self.content}"
+
+class Rating(AbstractReviewRating):
+    def additional_method(self):
+        return f"Rating by User {self.user_id} for Product {self.product_id}: {self.rating}"
+
 
