@@ -1,6 +1,7 @@
 from pydantic import BaseModel, EmailStr
 from typing import List, Optional
 from datetime import datetime
+from abc import ABC, abstractmethod
 
 class User(BaseModel):
     user_id: int
@@ -14,23 +15,7 @@ class User(BaseModel):
     address: str | None = None
     phone_number: str | None = None
     date_of_birth: datetime | None = None
-    profile_image: str | None = None
-    is_active: bool = True
 
-    def activate(self):
-        self.is_active = True
-
-    def deactivate(self):
-        self.is_active = False
-
-    def __init__(self, **data):
-        super().__init__(**data)  # Calling the parent (BaseModel) constructor
-        print(f"User {self.email} is being created")
-        print(f"User is active = {self.is_active} ")
-        print(f"User is active = {self.roles} ")
-
-    def __del__(self):
-        print(f"User {self.email} is being destroyed")
 
 
 class ProductCategory(BaseModel):
@@ -66,7 +51,7 @@ class CartItem(BaseModel):
     quantity: int
     product_id: int  
     cart_id: int  
-    MIN_QUANTITY:int = 0
+    MIN_QUANTITY:int = 1
 
 class Cart(BaseModel):
     cart_id: int
@@ -101,15 +86,3 @@ class Payment(BaseModel):
     order_id: int  
 
 
-class Review(BaseModel):
-    review_id: int
-    user_id: int  
-    product_id: int  
-
-    
-class Rating(BaseModel):
-    rating_id: int
-    user_id: int  
-    product_id: int  
-
-    
